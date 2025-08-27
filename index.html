@@ -4,6 +4,7 @@
   <meta charset="UTF-8">
   <title>Online Business Card</title>
   <style>
+    /* ==== Layout ==== */
     body {
       display: flex;
       flex-direction: column;
@@ -18,14 +19,13 @@
     }
 
     .scene {
-      width: 90vw;
-      max-width: 600px;
-      height: calc(90vw * 0.58);
-      max-height: 350px;
+      width: 600px;
+      height: 350px;
       perspective: 1200px;
       cursor: grab;
     }
 
+    /* ==== Card ==== */
     .card {
       width: 100%;
       height: 100%;
@@ -53,13 +53,50 @@
       transform: rotateY(180deg);
     }
 
+    /* ==== Rainbow shine (Easter Egg) ==== */
+    .card::after {
+      content: "";
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      border-radius: 16px;
+      background: linear-gradient(
+        120deg,
+        red,
+        orange,
+        yellow,
+        green,
+        blue,
+        indigo,
+        violet,
+        red
+      );
+      background-size: 400% 400%;
+      opacity: 0;
+      pointer-events: none;
+      mix-blend-mode: screen;
+    }
+
+    .card.rainbow::after {
+      opacity: 0.8;
+      animation: rainbowShine 2s linear;
+    }
+
+    @keyframes rainbowShine {
+      0% { background-position: 200% 0; }
+      100% { background-position: -200% 0; }
+    }
+
+    /* ==== Gyro button ==== */
     .gyro-container {
       position: absolute;
       bottom: 40px;
       left: 50%;
       transform: translateX(-50%);
-      width: 100px;
-      height: 100px;
+      width: 120px;
+      height: 120px;
       border-radius: 50%;
       background: radial-gradient(circle at center, rgba(255,255,255,0.15), rgba(0,0,0,0.25));
       border: 2px solid rgba(255,255,255,0.3);
@@ -73,8 +110,8 @@
     }
 
     .gyro-dot {
-      width: 20px;
-      height: 20px;
+      width: 22px;
+      height: 22px;
       border-radius: 50%;
       background: rgba(255,255,255,1);
       box-shadow: 0 0 20px rgba(255,255,255,1);
@@ -83,6 +120,7 @@
   </style>
 </head>
 <body>
+  <!-- ==== 3D Card ==== -->
   <div class="scene" id="scene">
     <div class="card" id="card">
       <div class="card-face front"></div>
@@ -90,6 +128,7 @@
     </div>
   </div>
 
+  <!-- ==== Gyro Button ==== -->
   <div class="gyro-container">
     <div class="gyro-dot" id="gyroDot"></div>
   </div>
@@ -105,14 +144,17 @@
     let rotationX = 0, rotationY = 0;
     let targetRotationX = 0, targetRotationY = 0;
 
+    // ==== Easter Egg state ====
     let isEasterEgg = false;
     let easterEggEnd = 0;
 
     function render() {
       if (isEasterEgg) {
-        targetRotationY += 10;
+        targetRotationY += 20;
         if (Date.now() > easterEggEnd) {
           isEasterEgg = false;
+          card.classList.add("rainbow");
+          setTimeout(() => card.classList.remove("rainbow"), 2000);
         }
       }
 
@@ -157,10 +199,12 @@
       startY = e.clientY;
       scene.style.cursor = "grabbing";
     });
+
     scene.addEventListener('mouseup', () => {
       isDragging = false;
       scene.style.cursor = "grab";
     });
+
     scene.addEventListener('mousemove', (e) => {
       if (!isDragging) return;
       let dx = e.clientX - startX;
@@ -176,9 +220,11 @@
       startX = e.touches[0].clientX;
       startY = e.touches[0].clientY;
     });
+
     scene.addEventListener('touchend', () => {
       isDragging = false;
     });
+
     scene.addEventListener('touchmove', (e) => {
       if (!isDragging) return;
       let dx = e.touches[0].clientX - startX;
@@ -189,10 +235,11 @@
       startY = e.touches[0].clientY;
     });
 
-    // Easter Egg trigger
+    // ==== Easter Egg trigger ====
     gyroContainer.addEventListener('click', () => {
       isEasterEgg = true;
-      easterEggEnd = Date.now() + 1000;
+      const duration = 500 + Math.random() * 1000; // 0.5~1.5s random spin
+      easterEggEnd = Date.now() + duration;
     });
   </script>
 </body>
