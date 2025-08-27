@@ -18,8 +18,10 @@
     }
 
     .scene {
-      width: 600px;
-      height: 350px;
+      width: 90vw;
+      max-width: 600px;
+      height: calc(90vw * 0.58);
+      max-height: 350px;
       perspective: 1200px;
       cursor: grab;
     }
@@ -43,11 +45,11 @@
     }
 
     .front {
-      background-image: url('business_card_korean.png');
+      background-image: url('business_card_page_1.png');
     }
 
     .back {
-      background-image: url('business_card_english.png');
+      background-image: url('business_card_page_2.png');
       transform: rotateY(180deg);
     }
 
@@ -56,8 +58,8 @@
       bottom: 40px;
       left: 50%;
       transform: translateX(-50%);
-      width: 120px;
-      height: 120px;
+      width: 100px;
+      height: 100px;
       border-radius: 50%;
       background: radial-gradient(circle at center, rgba(255,255,255,0.15), rgba(0,0,0,0.25));
       border: 2px solid rgba(255,255,255,0.3);
@@ -71,8 +73,8 @@
     }
 
     .gyro-dot {
-      width: 22px;
-      height: 22px;
+      width: 20px;
+      height: 20px;
       border-radius: 50%;
       background: rgba(255,255,255,1);
       box-shadow: 0 0 20px rgba(255,255,255,1);
@@ -103,7 +105,6 @@
     let rotationX = 0, rotationY = 0;
     let targetRotationX = 0, targetRotationY = 0;
 
-    // Easter Egg 상태
     let isEasterEgg = false;
     let easterEggEnd = 0;
 
@@ -156,12 +157,10 @@
       startY = e.clientY;
       scene.style.cursor = "grabbing";
     });
-
     scene.addEventListener('mouseup', () => {
       isDragging = false;
       scene.style.cursor = "grab";
     });
-
     scene.addEventListener('mousemove', (e) => {
       if (!isDragging) return;
       let dx = e.clientX - startX;
@@ -177,11 +176,9 @@
       startX = e.touches[0].clientX;
       startY = e.touches[0].clientY;
     });
-
     scene.addEventListener('touchend', () => {
       isDragging = false;
     });
-
     scene.addEventListener('touchmove', (e) => {
       if (!isDragging) return;
       let dx = e.touches[0].clientX - startX;
