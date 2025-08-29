@@ -16,11 +16,13 @@
       background: url('background.jpg') no-repeat center center fixed;
       background-size: cover;
       font-family: sans-serif;
+      touch-action: none;
     }
 
     .scene {
-      width: 600px;
-      height: 350px;
+      width: calc(100vw - 80px);
+      max-width: 600px;
+      aspect-ratio: 600 / 350;
       perspective: 1200px;
       cursor: grab;
     }
@@ -53,7 +55,7 @@
       transform: rotateY(180deg);
     }
 
-    /* ==== Rainbow shine (Easter Egg) ==== */
+    /* ==== Rainbow shine (Easter Egg only) ==== */
     .card::after {
       content: "";
       position: absolute;
@@ -238,7 +240,7 @@
     // ==== Easter Egg trigger ====
     gyroContainer.addEventListener('click', () => {
       isEasterEgg = true;
-      const duration = 500 + Math.random() * 1000; // 0.5~1.5s random spin
+      const duration = 500 + Math.random() * 1000;
       easterEggEnd = Date.now() + duration;
     });
   </script>
